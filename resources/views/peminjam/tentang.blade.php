@@ -73,7 +73,7 @@
         
         <div class="flex justify-center gap-4">
             <a href="{{ route('koleksi') }}" class="bg-[#6B8E6B] hover:bg-[#4A6B4A] text-white px-8 py-3 rounded-lg font-bold transition-all shadow-md">Jelajahi Buku</a>
-            <a href="{{ route('register') }}" class="bg-white hover:bg-slate-100 text-[#6B8E6B] px-8 py-3 rounded-lg font-bold transition-all shadow-md">Gabung Sekarang</a>
+            <a href="#" class="bg-white hover:bg-slate-100 text-[#6B8E6B] px-8 py-3 rounded-lg font-bold transition-all shadow-md">Gabung Sekarang</a>
         </div>
     </div>
 

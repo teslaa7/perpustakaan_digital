@@ -87,10 +87,7 @@
 
     {{-- KONTEN UTAMA --}}
     <main class="flex-1 flex flex-col h-screen overflow-y-auto">
-        {{-- Header Topbar --}}
-        <header class="h-20 bg-white shadow-sm flex items-center px-8 border-b border-[#E8F0E8] sticky top-0 z-10">
-            <h2 class="text-xl font-bold text-[#4A6B4A]">@yield('header_title', 'Dashboard')</h2>
-        </header>
+       
         
         {{-- Area Konten Dinamis --}}
         <div class="p-8">

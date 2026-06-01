@@ -85,7 +85,7 @@
             </p>
             
             <div class="flex flex-wrap gap-4">
-                <a href="{{ route('koleksi') }}" class="bg-[#6B8E6B] hover:bg-[#4A6B4A] text-white px-8 py-3 rounded-lg font-bold transition-all shadow-md">
+                <a href="{{ route('koleksi') }}" class="bg-[#85A385] hover:bg-[#6B8E6B] text-white px-8 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
                     Lihat Koleksi
                 </a>
                 <a href="{{ route('riwayat.index') }}" class="bg-[#85A385] hover:bg-[#6B8E6B] text-white px-8 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">

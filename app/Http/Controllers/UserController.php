@@ -134,5 +134,26 @@ class UserController extends Controller
         $pdf->setPaper('a4', 'portrait');
         
         return $pdf->download('laporan-data-anggota-' . date('Y-m-d') . '.pdf');
+
+        
+    }
+
+
+    // TARUH FUNGSI INI SEBELUM TANDA "}" PENUTUP CLASS YA BRO!
+    public function unduhPdfPetugas()
+    {
+        // Ambil data petugas & admin
+        $petugas = \App\Models\User::whereIn('role', ['admin', 'administrator', 'petugas'])
+                        ->orderBy('role', 'ASC')
+                        ->orderBy('NamaLengkap', 'ASC')
+                        ->get();
+        
+        // Load ke view cetak
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.petugas.cetak', compact('petugas'));
+        
+        // Kertas A4 Portrait
+        $pdf->setPaper('a4', 'portrait');
+        
+        return $pdf->download('laporan-data-petugas-' . date('Y-m-d') . '.pdf');
     }
 }

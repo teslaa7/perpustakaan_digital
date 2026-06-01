@@ -36,15 +36,15 @@
        <div class="flex items-center gap-4">
             @auth
                 <div class="hidden md:block text-right mr-2">
-                    <p class="text-sm font-bold text-white">{{ auth()->user()->NamaLengkap ?? auth()->user()->Username ?? 'Member' }}</p>
+                    <p class="text-sm font-bold text-[#4A6B4A]">{{ auth()->user()->NamaLengkap ?? auth()->user()->Username ?? 'Member' }}</p>
                 </div>
                 
                 <a href="{{ auth()->user()->role === 'administrator' || auth()->user()->role === 'petugas' ? route('admin.dashboard') : route('profile') }}" 
-                   class="bg-white text-[#85A385] hover:bg-slate-100 px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
+                   class="bg-[#85A385] text-white hover:bg-[#6B8E6B] px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
                     {{ auth()->user()->role === 'peminjam' ? 'Akun Saya' : 'Dashboard' }}
                 </a>
             @else
-                <a href="{{ route('login') }}" class="bg-white text-[#85A385] hover:bg-slate-100 px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
+                <a href="{{ route('login') }}" class="bg-[#85A385] text-white hover:bg-[#6B8E6B] px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
                     Login / Sign in
                 </a>
             @endauth

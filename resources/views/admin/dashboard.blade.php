@@ -3,6 +3,7 @@
 @section('content')
 <div class="space-y-6 relative z-0">
     
+    {{-- Banner Welcome --}}
     <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 shadow-lg text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-blue-500 opacity-20 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 right-32 w-32 h-32 bg-indigo-500 opacity-20 rounded-full blur-2xl"></div>
@@ -22,6 +23,7 @@
         </div>
     </div>
 
+    {{-- Alert Muncul Kalau Ada Yang Menunggu ACC --}}
     @if($peminjaman_menunggu > 0)
     <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between">
         <div class="flex items-center">
@@ -43,7 +45,7 @@
         
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center hover:shadow-md transition-shadow group cursor-default">
             <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             </div>
             <div>
                 <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Buku</p>
@@ -91,13 +93,18 @@
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center hover:shadow-md transition-shadow group cursor-default">
-            <div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+        {{-- KOTAK MENUNGGU ACC (SUDAH DIBIKIN DINAMIS & BISA KEDAP KEDIP KUNING) --}}
+        <div class="bg-white p-6 rounded-2xl shadow-sm border {{ $peminjaman_menunggu > 0 ? 'border-yellow-400 bg-yellow-50/50' : 'border-slate-100' }} flex items-center hover:shadow-md transition-shadow group cursor-default relative overflow-hidden">
+            @if($peminjaman_menunggu > 0)
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-yellow-500 animate-pulse"></div>
+            @endif
+            
+            <div class="w-14 h-14 rounded-xl {{ $peminjaman_menunggu > 0 ? 'bg-yellow-200 text-yellow-600' : 'bg-teal-50 text-teal-600' }} flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <div>
-                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Menunggu Acc</p>
-                <h3 class="text-3xl font-black text-slate-800">{{ $peminjaman_menunggu }}</h3>
+                <p class="text-sm font-semibold {{ $peminjaman_menunggu > 0 ? 'text-yellow-700' : 'text-slate-500' }} uppercase tracking-wider mb-1">Menunggu Acc</p>
+                <h3 class="text-3xl font-black {{ $peminjaman_menunggu > 0 ? 'text-yellow-600 animate-pulse' : 'text-slate-800' }}">{{ $peminjaman_menunggu }}</h3>
             </div>
         </div>
 

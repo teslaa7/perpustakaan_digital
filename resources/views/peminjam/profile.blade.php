@@ -34,7 +34,7 @@
 </head>
 <body class="text-[#4A6B4A] flex flex-col min-h-screen">
 
-    <nav class="w-full pt-6 pb-4 px-8 md:px-16 flex justify-between items-center bg-[#85A385] text-white relative z-50 shadow-sm">
+   <nav class="w-full pt-6 pb-4 px-8 md:px-16 flex justify-between items-center bg-[#85A385] text-white relative z-50 shadow-sm">
         <a href="{{ route('home') }}" class="font-black text-2xl leading-tight text-white hover:text-slate-100 transition-colors">
             Perpus<br><span class="font-medium text-lg">Digital</span>
         </a>

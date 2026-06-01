@@ -13,7 +13,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            Cetak Rekap PDF
+            Cetak PDF
         </a>
     </div>
 
@@ -105,14 +105,11 @@
                                 </form>
                             @endif
 
+                            {{-- INI YANG DIGANTI: Admin gak bisa Selesaikan, cuma bisa mantau --}}
                             @if($item->StatusPeminjaman == 'Dipinjam')
-                                <form action="{{ route('peminjaman.status', $item->PeminjamanID) }}" method="POST" class="m-0 p-0">
-                                    @csrf
-                                    <input type="hidden" name="status" value="Dikembalikan">
-                                    <button type="submit" class="bg-slate-700 hover:bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs transition-all font-bold shadow-sm transform hover:-translate-y-0.5" onclick="return confirm('Selesaikan peminjaman ini secara manual?')">
-                                        Selesaikan
-                                    </button>
-                                </form>
+                                <span class="text-slate-500 font-bold text-[10px] uppercase bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                    Menunggu Peminjam
+                                </span>
                             @endif
 
                             @if($item->StatusPeminjaman == 'Dikembalikan' || $item->StatusPeminjaman == 'Ditolak')

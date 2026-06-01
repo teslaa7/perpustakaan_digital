@@ -58,22 +58,43 @@ class KoleksiController extends Controller
     }
 
     /**
-     * Menampilkan halaman Koleksi Umum dan Slider Ulasan
+     * Menampilkan halaman Koleksi Umum, Search, Kategori, dan Slider Ulasan
      */
-    public function koleksi()
+    public function koleksi(Request $request)
     {
-        // 1. Ambil data buku
-        $buku = Buku::all(); 
+        // 1. Ambil semua list kategori dari tabel database (buat nampilin tombol kategori di view)
+        $kategoriList = DB::table('kategoribuku')->get();
 
-        // 2. KODINGAN ULASAN YANG UDAH DI-FIX
-        // Kita join berdasarkan 'user.UserID' dan ngurutin berdasarkan 'UlasanID' yang paling baru
+        // 2. Siapkan query dasar untuk ngambil buku
+        $query = DB::table('buku');
+
+        // 3. Logika Filter Kategori (Jika user klik kategori tertentu)
+        if ($request->has('kategori') && $request->kategori != '') {
+            $query->join('kategoribuku_relasi', 'buku.BukuID', '=', 'kategoribuku_relasi.BukuID')
+                  ->join('kategoribuku', 'kategoribuku_relasi.KategoriID', '=', 'kategoribuku.KategoriID')
+                  ->where('kategoribuku.NamaKategori', $request->kategori);
+        }
+
+        // 4. Logika Search (Jika user ngetik di kolom pencarian)
+        if ($request->has('search') && $request->search != '') {
+            $keyword = $request->search;
+            $query->where(function($q) use ($keyword) {
+                $q->where('buku.Judul', 'like', '%' . $keyword . '%')
+                  ->orWhere('buku.Penulis', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // 5. Eksekusi query buku (pake distinct biar ga ada buku yg double/duplikat)
+        $buku = $query->select('buku.*')->distinct()->get();
+
+        // 6. KODINGAN ULASAN YANG UDAH DI-FIX (Biarkan sama persis kaya punya lu)
         $ulasan = DB::table('ulasanbuku')
                     ->join('user', 'ulasanbuku.UserID', '=', 'user.UserID')
                     ->select('ulasanbuku.*', 'user.NamaLengkap', 'user.Username', 'user.Email')
                     ->orderBy('ulasanbuku.UlasanID', 'desc')
                     ->get();
 
-        // 3. Lempar ke tampilan
-       return view('peminjam.koleksi', compact('buku', 'ulasan'));
+        // 7. Lempar semua data (buku, ulasan, list kategori) ke tampilan
+        return view('peminjam.koleksi', compact('buku', 'ulasan', 'kategoriList'));
     }
 }

@@ -55,18 +55,13 @@
     </nav>
 
     <div class="wave-header w-full pt-16 pb-32 px-8 md:px-16 relative -mt-4 z-0 shadow-inner" data-aos="fade-down">
-        <div class="max-w-7xl mx-auto text-right text-white pr-4">
-            <h1 class="text-5xl font-black mb-2 tracking-wide">Riwayat Buku</h1>
-            <p class="text-lg font-medium opacity-90">Track all your borrowed and returned books.</p>
-        </div>
+        <div class="max-w-7xl mx-auto text-center text-white px-4">
+    <h1 class="text-5xl font-black mb-2 tracking-wide">Riwayat Buku</h1>
+    <p class="text-lg font-medium opacity-90">Track all your borrowed and returned books.</p>
+</div>
     </div>
 
-    <div class="max-w-4xl mx-auto w-full px-6 -mt-10 relative z-20" data-aos="fade-up" data-aos-delay="100">
-        <div class="relative flex items-center">
-            <span class="absolute left-4 text-slate-400 text-xl">🔍</span>
-            <input type="text" placeholder="Cari buku..." class="w-full bg-[#E8F0E8] border border-[#C8DAC8] text-slate-700 px-12 py-3.5 rounded-xl shadow-md outline-none focus:ring-2 focus:ring-[#85A385] transition-all font-medium placeholder-slate-400">
-        </div>
-    </div>
+    
 
     @if(session('success'))
         <div class="max-w-5xl mx-auto px-6 mt-8 w-full" data-aos="fade-down">

@@ -36,4 +36,23 @@ class UlasanBuku extends Model
     {
         return $this->belongsTo(Buku::class, 'BukuID', 'BukuID');
     }
+
+    public function unduhPdf()
+    {
+        // Ambil data ulasan, join dengan tabel user dan buku kalau manual, 
+        // atau pakai relasi ->with() kalau model UlasanBuku lu udah ada relasinya
+        // *Asumsi dari view index lu, datanya manggil langsung kolom NamaLengkap, Username, Judul
+        // Kalau pakai DB Query Builder (asumsi sesuai data di view index lu):
+        $ulasan = \Illuminate\Support\Facades\DB::table('ulasanbuku')
+            ->leftJoin('user', 'ulasanbuku.UserID', '=', 'user.UserID')
+            ->leftJoin('buku', 'ulasanbuku.BukuID', '=', 'buku.BukuID')
+            ->select('ulasanbuku.*', 'user.NamaLengkap', 'user.Username', 'buku.Judul')
+            ->orderBy('ulasanbuku.created_at', 'DESC')
+            ->get();
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.ulasan.cetak', compact('ulasan'));
+        $pdf->setPaper('a4', 'portrait');
+        
+        return $pdf->download('laporan-data-ulasan-' . date('Y-m-d') . '.pdf');
+    }
 }

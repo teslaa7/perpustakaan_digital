@@ -20,12 +20,18 @@ class DashboardController extends Controller
         $total_petugas = User::where('role', 'petugas')->count();
         $total_peminjam = User::where('role', 'peminjam')->count();
         
-        // Hitung transaksi yang butuh perhatian admin (Status: Menunggu)
-        $peminjaman_menunggu = Peminjaman::where('StatusPeminjaman', 'menunggu')->count();
+        // JURUS SAPU JAGAT: Tangkap semua kemungkinan status yang artinya "Belum di-ACC"
+        $peminjaman_menunggu = Peminjaman::whereIn('StatusPeminjaman', [
+            'Menunggu', 'menunggu', 'MENUNGGU', 
+            'Menunggu Acc', 'menunggu acc', 'MENUNGGU ACC',
+            'pending', 'Pending', 'PENDING',
+            '0', 0
+        ])->count();
         
         // Hitung total ulasan masuk
         $total_ulasan = UlasanBuku::count();
 
+        // Lempar semua variabel ke halaman dashboard admin
         return view('admin.dashboard', compact(
             'total_buku', 
             'total_kategori', 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,6 +19,7 @@
 </head>
 <body class="text-[#4A6B4A] flex flex-col min-h-screen">
 
+    {{-- NAVBAR --}}
     <nav class="w-full pt-6 pb-4 px-8 md:px-16 flex justify-between items-center bg-[#85A385] text-white relative z-50 shadow-sm">
         <a href="{{ route('home') }}" class="font-black text-2xl leading-tight text-white hover:text-slate-100 transition-colors">
             Perpus<br><span class="font-medium text-lg">Digital</span>
@@ -36,21 +36,22 @@
         <div class="flex items-center gap-4">
             @auth
                 <div class="hidden md:block text-right mr-2">
-                    <p class="text-sm font-bold text-white">{{ auth()->user()->NamaLengkap ?? auth()->user()->Username ?? 'Member' }}</p>
+                    <p class="text-sm font-bold text-[#4A6B4A]">{{ auth()->user()->NamaLengkap ?? auth()->user()->Username ?? 'Member' }}</p>
                 </div>
                 
                 <a href="{{ auth()->user()->role === 'administrator' || auth()->user()->role === 'petugas' ? route('admin.dashboard') : route('profile') }}" 
-                   class="bg-white text-[#85A385] hover:bg-slate-100 px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
+                   class="bg-[#85A385] text-white hover:bg-[#6B8E6B] px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
                     {{ auth()->user()->role === 'peminjam' ? 'Akun Saya' : 'Dashboard' }}
                 </a>
             @else
-                <a href="{{ route('login') }}" class="bg-white text-[#85A385] hover:bg-slate-100 px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
+                <a href="{{ route('login') }}" class="bg-[#85A385] text-white hover:bg-[#6B8E6B] px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-md transform hover:-translate-y-1">
                     Login / Sign in
                 </a>
             @endauth
         </div>
     </nav>
 
+    {{-- ALERT PESAN --}}
     @if(session('success'))
         <div class="max-w-5xl mx-auto px-6 mt-6 w-full" data-aos="fade-down">
             <div class="bg-[#F4F9F4] border-l-4 border-[#5C805C] text-[#4A6B4A] font-bold p-4 rounded-r-xl shadow-sm">
@@ -66,28 +67,50 @@
         </div>
     @endif
 
+    {{-- HERO TITLE --}}
     <div class="wave-bg w-full pt-12 pb-24 px-8 md:px-16 relative -mt-4 z-0 shadow-inner" data-aos="fade-down">
-        <h1 class="text-4xl md:text-5xl font-black text-white max-w-7xl mx-auto tracking-wide">
+        <h1 class="text-4xl md:text-5xl font-black text-white max-w-7xl mx-auto text-center tracking-wide">
             Koleksi Umum
         </h1>
     </div>
 
+    {{-- SEARCH BAR DINAMIS --}}
     <div class="max-w-3xl mx-auto w-full px-6 -mt-10 relative z-20" data-aos="fade-up" data-aos-delay="200">
-        <div class="relative flex items-center">
+        <form action="{{ route('koleksi') }}" method="GET" class="relative flex items-center">
             <span class="absolute left-4 text-slate-400 text-xl">🔍</span>
-            <input type="text" placeholder="Cari buku..." class="w-full bg-[#E8F0E8] border-2 border-white text-slate-700 px-12 py-3 rounded-xl shadow-md outline-none focus:ring-2 focus:ring-[#6B8E6B] transition-all font-medium placeholder-slate-400">
-        </div>
+            
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari buku berdasarkan judul atau penulis..." class="w-full bg-[#E8F0E8] border-2 border-white text-slate-700 px-12 py-3 rounded-xl shadow-md outline-none focus:ring-2 focus:ring-[#6B8E6B] transition-all font-medium placeholder-slate-400">
+            
+            @if(request('kategori'))
+                <input type="hidden" name="kategori" value="{{ request('kategori') }}">
+            @endif
+            
+            <button type="submit" class="hidden"></button>
+        </form>
     </div>
 
+    {{-- MENU KATEGORI DINAMIS --}}
     <div class="max-w-5xl mx-auto px-6 py-10 w-full flex justify-center gap-6 md:gap-12 text-sm font-semibold text-[#7DA07D] flex-wrap" data-aos="fade-in" data-aos-delay="300">
-        <a href="#" class="hover:text-[#4A6B4A] text-[#4A6B4A] border-b-2 border-[#4A6B4A] pb-1">Semua</a>
-        <a href="#" class="hover:text-[#4A6B4A] transition-colors">Novels</a>
-        <a href="#" class="hover:text-[#4A6B4A] transition-colors">Non-fiksi</a>
-        <a href="#" class="hover:text-[#4A6B4A] transition-colors">Biografi</a>
-        <a href="#" class="hover:text-[#4A6B4A] transition-colors">Petualangan</a>
-        <a href="#" class="hover:text-[#4A6B4A] transition-colors">Sains</a>
+        
+        {{-- PERUBAHAN: Hapus array search, jadi kalau klik 'Semua', URL bener-bener bersih --}}
+        <a href="{{ route('koleksi') }}" 
+           class="{{ !request('kategori') ? 'text-[#4A6B4A] border-b-2 border-[#4A6B4A] pb-1' : 'hover:text-[#4A6B4A] transition-colors' }}">
+            Semua
+        </a>
+
+        @if(isset($kategoriList) && $kategoriList->count() > 0)
+            @foreach($kategoriList as $kat)
+                {{-- PERUBAHAN: Hanya kirim parameter 'kategori' saja, tinggalkan 'search' --}}
+                <a href="{{ route('koleksi', ['kategori' => $kat->NamaKategori]) }}" 
+                   class="{{ request('kategori') == $kat->NamaKategori ? 'text-[#4A6B4A] border-b-2 border-[#4A6B4A] pb-1' : 'hover:text-[#4A6B4A] transition-colors' }}">
+                    {{ $kat->NamaKategori }}
+                </a>
+            @endforeach
+        @endif
+
     </div>
 
+    {{-- KONTEN GRID BUKU --}}
     <main class="max-w-6xl mx-auto px-6 mb-20 w-full">
         <div class="bg-[#E8F0E8] p-8 md:p-12 rounded-3xl soft-shadow" data-aos="fade-up" data-aos-delay="400">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -106,10 +129,8 @@
                         {{-- JUDUL --}}
                         <h4 class="font-black text-center text-slate-800 text-sm leading-snug mb-4 line-clamp-2 min-h-[40px]">{{ $item->Judul }}</h4>
                         
-                        {{-- AREA BAWAH (Info Stok & Tombol Aksi) --}}
+                        {{-- INFO STOK & TOMBOL --}}
                         <div class="w-full flex flex-col gap-2 mt-auto">
-                            
-                            {{-- INFO STOK SEBAGAI PENGGANTI TOMBOL PINJAM --}}
                             @if($item->Stok > 0)
                                 <div class="w-full h-9 flex items-center justify-center bg-[#F4F9F4] text-[#4A6B4A] font-black rounded-lg text-xs shadow-inner tracking-widest uppercase border border-[#C8DAC8]">
                                     📦 TERSISA : {{ $item->Stok }} BUKU
@@ -120,34 +141,30 @@
                                 </div>
                             @endif
 
-                            {{-- TOMBOL DETAIL & SAVE SEJAJAR --}}
                             <div class="flex gap-2 mt-1 w-full">
-    {{-- TOMBOL DETAIL --}}
-    <a href="{{ route('buku.detail', $item->BukuID) }}" class="flex-1 bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
-        Detail
-    </a>
-    
-    {{-- TOMBOL SAVE --}}
-    <form action="{{ route('koleksi.store', $item->BukuID) }}" method="POST" class="flex-1 flex m-0">
-        @csrf
-        <button type="submit" class="w-full bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
-            Save
-        </button>
-    </form>
-</div>
-                            
+                                <a href="{{ route('buku.detail', $item->BukuID) }}" class="flex-1 bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
+                                    Detail
+                                </a>
+                                <form action="{{ route('koleksi.store', $item->BukuID) }}" method="POST" class="flex-1 flex m-0">
+                                    @csrf
+                                    <button type="submit" class="w-full bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
+                                        Save
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @empty
                     <div class="col-span-full text-center py-12">
                         <span class="text-5xl mb-3 block">😢</span>
-                        <p class="text-[#7DA07D] font-bold">Koleksi buku sedang kosong.</p>
+                        <p class="text-[#7DA07D] font-bold">Maaf, buku tidak ditemukan.</p>
                     </div>
                 @endforelse
             </div>
         </div>
     </main>
 
+    {{-- REVIEW PEMBACA --}}
     <section class="max-w-4xl mx-auto px-6 mb-24 w-full text-center" data-aos="fade-up">
         <h2 class="text-4xl font-black text-[#6B8E6B] mb-8">Review Pembaca</h2>
         
@@ -186,6 +203,7 @@
         </div>
     </section>
 
+    {{-- FOOTER --}}
     <footer class="bg-[#85A385] text-white pt-16 pb-6 px-8 md:px-16 mt-auto border-t border-[#6B8E6B]">
         <div class="text-center text-xs font-medium text-white">
             © {{ date('Y') }} PerpusDigital All rights reserved.

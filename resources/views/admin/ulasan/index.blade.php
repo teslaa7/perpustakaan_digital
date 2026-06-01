@@ -2,12 +2,19 @@
 
 @section('content')
 <div class="bg-white rounded-2xl shadow-sm border border-[#E8F0E8] p-6 relative">
-    {{-- HEADER HALAMAN --}}
-    <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-[#E8F0E8] pb-4 gap-4">
+    {{-- HEADER HALAMAN & TOMBOL CETAK --}}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-[#E8F0E8] pb-4 gap-4">
         <div>
             <h2 class="text-2xl font-black text-[#4A6B4A]">Kelola Ulasan & Rating</h2>
             <p class="text-[#7DA07D] mt-1 text-sm font-medium">Pantau semua komentar peminjam dan hapus ulasan yang tidak pantas.</p>
         </div>
+        
+        <a href="{{ route('ulasan.pdf') }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Cetak PDF
+        </a>
     </div>
 
     {{-- NOTIFIKASI SUKSES --}}
@@ -62,7 +69,6 @@
                         <form action="{{ route('ulasan.destroy', $item->UlasanID) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')" class="m-0 p-0">
                             @csrf
                             @method('DELETE')
-                            {{-- FIX: Tombol warna soft-red, kalau kursor nempel (hover) jadi MERAH PEKAT --}}
                             <button type="submit" class="bg-red-100 hover:bg-red-600 text-red-500 hover:text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm">
                                 Hapus
                             </button>

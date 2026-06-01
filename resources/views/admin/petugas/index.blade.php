@@ -1,19 +1,34 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-2xl shadow-sm border border-[#E8F0E8] p-6 relative w-full">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-[#E8F0E8] pb-4 gap-4">
-        <div class="w-full">
-            <h2 class="text-2xl font-black text-[#4A6B4A]">Manajemen Petugas & Admin</h2>
-            <p class="text-[#7DA07D] mt-1 text-sm font-medium">Kelola hak akses untuk petugas perpustakaan dan administrator.</p>
-        </div>
-        <button onclick="openModal('tambah')" class="bg-[#85A385] hover:bg-[#5C805C] text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap">
+<div class="bg-white rounded-2xl shadow-sm border border-[#E8F0E8] p-6 relative">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-[#E8F0E8] pb-4 gap-4">   
+    <div>
+        <h2 class="text-2xl font-black text-[#4A6B4A]">Manajemen Petugas</h2>
+        <p class="text-[#7DA07D] mt-1 text-sm font-medium">Kelola hak akses untuk petugas perpustakaan.</p>
+    </div>
+
+    {{-- TOMBOL AKSI: CETAK PDF & TAMBAH PETUGAS --}}
+    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+        
+        {{-- TOMBOL CETAK PDF --}}
+        <a href="{{ route('petugas.pdf') }}"
+           class="shrink-0 bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Cetak PDF
+        </a>
+
+        {{-- TOMBOL TAMBAH PETUGAS --}}
+        <button onclick="openModal('tambah')"
+                class="shrink-0 bg-[#85A385] hover:bg-[#5C805C] text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5 flex justify-center items-center gap-2 whitespace-nowrap">
             + Tambah Petugas
         </button>
     </div>
+</div>
 
-    <!-- Alert Success & Error -->
     @if(session('success'))
         <div class="bg-[#F4F9F4] border-l-4 border-[#5C805C] text-[#4A6B4A] font-bold p-4 mb-6 rounded-r-lg shadow-sm">
             ✅ {{ session('success') }}
@@ -25,7 +40,6 @@
         </div>
     @endif
 
-    <!-- Tabel Petugas -->
     <div class="overflow-x-auto rounded-xl border border-[#E8F0E8]">
         <table class="min-w-full bg-white text-left">
             <thead class="bg-[#F4F9F4] text-[#4A6B4A] text-sm uppercase tracking-wider">
@@ -88,7 +102,6 @@
     </div>
 </div>
 
-<!-- ================= MODAL TAMBAH ================= -->
 <div id="tambahModal" class="fixed inset-0 bg-gray-900/60 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-all">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8">
         <h3 class="text-2xl font-black mb-6 text-[#4A6B4A] border-b-2 border-[#E8F0E8] pb-3">Tambah Petugas Baru</h3>
@@ -128,7 +141,6 @@
     </div>
 </div>
 
-<!-- ================= MODAL EDIT ================= -->
 <div id="editModal" class="fixed inset-0 bg-gray-900/60 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-all">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8">
         <h3 class="text-2xl font-black mb-6 text-[#4A6B4A] border-b-2 border-[#E8F0E8] pb-3">Edit Data Petugas</h3>

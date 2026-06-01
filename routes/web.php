@@ -93,9 +93,11 @@ Route::middleware(['auth', 'role:admin,petugas'])->prefix('admin')->group(functi
         Route::get('/petugas', [UserController::class, 'indexPetugas'])->name('petugas.index'); 
         Route::post('/petugas', [UserController::class, 'storePetugas'])->name('petugas.store'); 
         Route::put('/petugas/{id}', [UserController::class, 'updatePetugas'])->name('petugas.update'); 
-        Route::delete('/petugas/{id}', [UserController::class, 'destroyPetugas'])->name('petugas.destroy'); 
+        Route::delete('/petugas/{id}', [UserController::class, 'destroyPetugas'])->name('petugas.destroy');
+        Route::get('/petugas/unduh-pdf', [UserController::class, 'unduhPdfPetugas'])->name('petugas.pdf'); 
         
         // Manajemen Ulasan
+        Route::get('/ulasan/unduh-pdf', [App\Http\Controllers\UlasanController::class, 'unduhPdf'])->name('ulasan.pdf');
         Route::get('/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
         Route::delete('/ulasan/{id}', [UlasanController::class, 'destroy'])->name('ulasan.destroy');
     });
