@@ -92,7 +92,6 @@
     {{-- MENU KATEGORI DINAMIS --}}
     <div class="max-w-5xl mx-auto px-6 py-10 w-full flex justify-center gap-6 md:gap-12 text-sm font-semibold text-[#7DA07D] flex-wrap" data-aos="fade-in" data-aos-delay="300">
         
-        {{-- PERUBAHAN: Hapus array search, jadi kalau klik 'Semua', URL bener-bener bersih --}}
         <a href="{{ route('koleksi') }}" 
            class="{{ !request('kategori') ? 'text-[#4A6B4A] border-b-2 border-[#4A6B4A] pb-1' : 'hover:text-[#4A6B4A] transition-colors' }}">
             Semua
@@ -100,7 +99,6 @@
 
         @if(isset($kategoriList) && $kategoriList->count() > 0)
             @foreach($kategoriList as $kat)
-                {{-- PERUBAHAN: Hanya kirim parameter 'kategori' saja, tinggalkan 'search' --}}
                 <a href="{{ route('koleksi', ['kategori' => $kat->NamaKategori]) }}" 
                    class="{{ request('kategori') == $kat->NamaKategori ? 'text-[#4A6B4A] border-b-2 border-[#4A6B4A] pb-1' : 'hover:text-[#4A6B4A] transition-colors' }}">
                     {{ $kat->NamaKategori }}
@@ -141,17 +139,27 @@
                                 </div>
                             @endif
 
-                            <div class="flex gap-2 mt-1 w-full">
-                                <a href="{{ route('buku.detail', $item->BukuID) }}" class="flex-1 bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
-                                    Detail
-                                </a>
-                                <form action="{{ route('koleksi.store', $item->BukuID) }}" method="POST" class="flex-1 flex m-0">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
-                                        Save
-                                    </button>
-                                </form>
-                            </div>
+                            {{-- LOGIKA PROTEKSI HAK AKSES TOMBOL --}}
+                            @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'petugas'))
+                                {{-- Jika Admin / Petugas, HANYA BISA LIHAT PREVIEW --}}
+                                <div class="mt-1 w-full text-center py-1.5 bg-[#E8F0E8] text-[#4A6B4A] text-[10px] font-bold rounded-lg border border-[#C8DAC8] uppercase tracking-wider shadow-inner">
+                                    Preview Admin & Petugas
+                                </div>
+                            @else
+                                {{-- Jika Peminjam ATAU Belum Login, BISA KLIK --}}
+                                <div class="flex gap-2 mt-1 w-full">
+                                    <a href="{{ route('buku.detail', $item->BukuID) }}" class="flex-1 bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
+                                        Detail
+                                    </a>
+                                    <form action="{{ route('koleksi.store', $item->BukuID) }}" method="POST" class="flex-1 flex m-0">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-[#85A385] hover:bg-[#6B8E6B] text-white font-semibold py-1.5 rounded-lg text-[10px] transition-all flex items-center justify-center">
+                                            Save
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 @empty
@@ -178,7 +186,11 @@
                     @foreach($ulasan as $index => $rev)
                         <div class="review-slide absolute inset-0 transition-opacity duration-500 flex flex-col md:flex-row items-center justify-center gap-6 text-left px-4 {{ $index == 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none' }}">
                             <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md flex-shrink-0 bg-slate-200">
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ $rev->Username }}" alt="Avatar" class="w-full h-full object-cover">
+                                @if(isset($rev->FotoProfil) && $rev->FotoProfil != '')
+                                    <img src="{{ asset('avatars/' . $rev->FotoProfil) }}" alt="Avatar" class="w-full h-full object-cover">
+                                @else
+                                    <img src="https://api.dicebear.com/7.x/notionists/svg?seed={{ $rev->Username }}" alt="Avatar Default" class="w-full h-full object-cover">
+                                @endif
                             </div>
                             <div>
                                 <h4 class="font-black text-lg text-slate-800">{{ $rev->NamaLengkap ?? $rev->Username }}</h4>

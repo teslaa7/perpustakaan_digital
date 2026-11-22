@@ -62,20 +62,20 @@ class KoleksiController extends Controller
      */
     public function koleksi(Request $request)
     {
-        // 1. Ambil semua list kategori dari tabel database (buat nampilin tombol kategori di view)
+        // 1. Ambil semua list kategori dari tabel database
         $kategoriList = DB::table('kategoribuku')->get();
 
         // 2. Siapkan query dasar untuk ngambil buku
         $query = DB::table('buku');
 
-        // 3. Logika Filter Kategori (Jika user klik kategori tertentu)
+        // 3. Logika Filter Kategori 
         if ($request->has('kategori') && $request->kategori != '') {
             $query->join('kategoribuku_relasi', 'buku.BukuID', '=', 'kategoribuku_relasi.BukuID')
                   ->join('kategoribuku', 'kategoribuku_relasi.KategoriID', '=', 'kategoribuku.KategoriID')
                   ->where('kategoribuku.NamaKategori', $request->kategori);
         }
 
-        // 4. Logika Search (Jika user ngetik di kolom pencarian)
+        // 4. Logika Search Pencarian Judul/Penulis
         if ($request->has('search') && $request->search != '') {
             $keyword = $request->search;
             $query->where(function($q) use ($keyword) {
@@ -84,17 +84,17 @@ class KoleksiController extends Controller
             });
         }
 
-        // 5. Eksekusi query buku (pake distinct biar ga ada buku yg double/duplikat)
+        // 5. Eksekusi query buku
         $buku = $query->select('buku.*')->distinct()->get();
 
-        // 6. KODINGAN ULASAN YANG UDAH DI-FIX (Biarkan sama persis kaya punya lu)
+        // 6. KODINGAN ULASAN (Sudah ditambah 'user.FotoProfil')
         $ulasan = DB::table('ulasanbuku')
                     ->join('user', 'ulasanbuku.UserID', '=', 'user.UserID')
-                    ->select('ulasanbuku.*', 'user.NamaLengkap', 'user.Username', 'user.Email')
+                    ->select('ulasanbuku.*', 'user.NamaLengkap', 'user.Username', 'user.Email', 'user.FotoProfil')
                     ->orderBy('ulasanbuku.UlasanID', 'desc')
                     ->get();
 
-        // 7. Lempar semua data (buku, ulasan, list kategori) ke tampilan
+        // 7. Lempar semua data ke tampilan
         return view('peminjam.koleksi', compact('buku', 'ulasan', 'kategoriList'));
     }
 }
